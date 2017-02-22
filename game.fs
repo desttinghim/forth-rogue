@@ -1,42 +1,33 @@
 
-40 constant width
+20 constant width
 10 constant height
 width height * constant area
 
 variable screen
 area cells allot
 
-
-: i-to-xy ( n -- x y )
-  dup dup width mod swap height / ;
-: xy-to-i ( x y -- n )
+: xy ( x y -- i )
   width * swap + ;
 
-: set-screen ( char x y -- )
-  xy-to-i cells screen + ! ;
+: set-screen ( char i -- )
+  cells screen + ! ;
 : print-screen ( -- )
-  page height 0 do screen i width * + width cells type cr loop ;
-\ : fill-screen ( char -- )
-\  area 0 do dup i i-to-xy set-screen loop drop ;
-
-\ 46 fill-screen
-
+  page height 0 do  screen i width * + width cells type cr  loop ;
 
 variable map
 area cells allot
 
-: set-map ( char x y -- )
-  width * swap + cells screen + ! ;
-: get-map ( x y -- char )
-  xy-to-i cells map + @ ;
-: fill-map ( -- )
-  area 0 do dup i i-to-xy set-map loop drop ;
+: set-map ( char i -- )  cells map + ! ;
+: get-map ( i -- char )  cells map + @ ;
+: fill-map ( char -- )
+  area 0 do  dup i set-map  loop drop ;
+: generate-test-map ( -- )
+  area 0 do  i i set-map  loop ;
 : map-to-screen
-  area 0 do  i i-to-xy get-map i i-to-xy .s set-screen  loop ;
+  area 0 do  i get-map  i set-screen  loop ;
 
-46 fill-map map-to-screen
+46 fill-map
+map-to-screen
 print-screen
 
 variable hero
-
-.s
