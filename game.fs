@@ -42,8 +42,18 @@ variable hero 1 cells allot
   map-to-screen
   hero-to-screen
   print-screen ;
+
+: input
+  key dup 119 = if  0 -1 move-hero  else
+      dup 97  = if  -1 0 move-hero  else
+      dup 115 = if  0 1 move-hero  else
+      dup 100 = if  1 0 move-hero  else
+  then then then then ;
+
+: update  begin input draw 0 until ;
 \ Runtime code
 
 46 fill-map
 9 4 xy place-hero
 draw
+update
