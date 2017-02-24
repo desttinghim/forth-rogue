@@ -1,8 +1,8 @@
 
 \ Constants
 
-20 constant width
-10 constant height
+100 constant width
+40 constant height
 width height * constant area
 46 constant empty
 
@@ -11,9 +11,13 @@ width height * constant area
 variable screen area cells allot
 variable map area cells allot
 variable hero 1 cells allot
+variable quit
+false quit !
 
 \ Word definitions
 \ General
+: quit-game ( -- )  true quit ! ;
+: quit ( -- quit ) quit @ ;
 : xy ( x y -- i )  width * swap + ;
 : i-to-xy ( TODO: make this ) ;
 
@@ -38,17 +42,19 @@ variable hero 1 cells allot
 : hero-to-screen ( -- )  64 locate-hero set-screen ;
 
 \ Control
-: input
+: input ( -- )
   key dup 119 = if  0 -1 move-hero  else
       dup 97  = if -1  0 move-hero  else
       dup 115 = if  0  1 move-hero  else
       dup 100 = if  1  0 move-hero  else
-  then then then then ;
-: draw  map-to-screen  hero-to-screen  print-screen ;
-: gameloop  begin input draw 0 until ;
-\ Runtime code
+      dup 113 = if  quit-game  then
+  then then then then drop ;
+: draw ( -- ) map-to-screen  hero-to-screen  print-screen ;
+: gameloop ( -- ) begin input draw  quit until ;
+: init ( -- )
+  empty fill-map
+  9 4 xy place-hero
+  draw
+  gameloop ;
 
-empty fill-map
-9 4 xy place-hero
-draw
-gameloop
+init
